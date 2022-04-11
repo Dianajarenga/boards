@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 """models created below form the data tables"""
 
 
-class Board(models.Model):
+class Boardx(models.Model):
     name = models.CharField(max_length=30, unique=True)
     description = models.CharField(max_length=100)
 
@@ -15,7 +15,7 @@ class Board(models.Model):
 class Topic(models.Model):
     subject = models.CharField(max_length=255)
     last_updated = models.DateTimeField(auto_now_add=True)
-    board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name='topics')
+    board = models.ForeignKey(Boardx, on_delete=models.CASCADE, related_name='topics')
     starter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='topics')
 
 

@@ -3,13 +3,13 @@ from django.test import TestCase
 from django.urls import reverse, resolve
 
 from .forms import NewTopicForm
-from .models import Board, Topic, Post
+from .models import Boardx, Topic, Post
 from .views import home, board_topics, new_topic
 
 
 class HomeTests(TestCase):
     def setUp(self):
-        self.board = Board.objects.create(name='Django', description='Django board.')
+        self.board = Boardx.objects.create(name='Django', description='Django board.')
         url = reverse('home')
         self.response = self.client.get(url)
 
@@ -19,7 +19,7 @@ class HomeTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_home_url_resolves_home_view(self):
-        view = resolve('/home')
+        view = resolve('/home/')
         self.assertEquals(view.func, home)
 
     def test_home_view_contains_link_to_topics_page(self):
@@ -30,7 +30,7 @@ class HomeTests(TestCase):
 # run -> python manage.py test --verbosity=2    for  higher level verbosity testing
 class BoardTopicsTests(TestCase):
     def setUp(self):
-        Board.objects.create(name='Django', description='Django board.')
+        Boardx.objects.create(name='Django', description='Django board.')
 
     def test_board_topics_view_success_status_code(self):
         url = reverse('board_topics', kwargs={'id': 1})
@@ -59,7 +59,7 @@ class BoardTopicsTests(TestCase):
 
 class NewTopicTests(TestCase):
     def setUp(self):
-        Board.objects.create(name='Django', description='Django board.')
+        Boardx.objects.create(name='Django', description='Django board.')
         User.objects.create_user(username='Sam', email='samantha@gmail.com', password='wamani12')
 
     def test_csrf(self):
@@ -78,19 +78,19 @@ class NewTopicTests(TestCase):
         self.assertTrue(Post.objects.exists())
 
     def test_new_topic_invalid_post_data(self):
-        '''
+        """
         Invalid post data should not redirect
         The expected behavior is to show the form again with validation errors
-        '''
+        """
         url = reverse('new_topic', kwargs={'id': 1})
         response = self.client.post(url, {})
         self.assertEquals(response.status_code, 200)
 
     def test_new_topic_invalid_post_data_empty_fields(self):
-        '''
+        """
         Invalid post data should not redirect
         The expected behavior is to show the form again with validation errors
-        '''
+        """
         url = reverse('new_topic', kwargs={'id': 1})
         data = {
             'subject': '',
@@ -128,10 +128,10 @@ class NewTopicTests(TestCase):
         self.assertIsInstance(form, NewTopicForm)
 
     def test_new_topic_invalid_post_data(self):  # <- updated this one
-        '''
+        """
         Invalid post data should not redirect
         The expected behavior is to show the form again with validation errors
-        '''
+        """
         url = reverse('new_topic', kwargs={'id': 1})
         response = self.client.post(url, {})
         form = response.context.get('form')
